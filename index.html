@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callistaria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f7f4ef; /* خلفية بيج فخمة */
+            color: #2c2c2c;
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية نجوم الأبراج والأجرام السماوية */
+        .stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(#b89753 1.2px, transparent 0),
+                radial-gradient(#2c2c2c 1px, transparent 0),
+                linear-gradient(to right, rgba(184,151,83,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(184,151,83,0.05) 1px, transparent 1px);
+            background-size: 180px 180px, 120px 120px, 90px 90px, 90px 90px;
+            opacity: 0.18;
+        }
+
+        header {
+            background-color: #ede7df;
+            border-bottom: 1px solid #d8cebf;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background-color: #2c2c2c;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a1a1a;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 350px;
+            margin: 0 30px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid #d8cebf;
+            background-color: #ffffff;
+            color: #2c2c2c;
+            outline: none;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .search-bar input::placeholder {
+            color: #8c8275;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .admin-btn {
+            background-color: #b89753;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .admin-btn:hover {
+            background-color: #96783c;
+        }
+
+        .cart-btn {
+            background-color: #1a1a1a;
+            color: #f7f4ef;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .cart-btn:hover {
+            background-color: #b89753;
+        }
+
+        /* القائمة الجانبية */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: #ede7df;
+            border-left: 1px solid #d8cebf;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+            transition: 0.4s ease;
+            z-index: 1000;
+            padding: 40px 20px;
+        }
+
+        .side-menu.active {
+            right: 0;
+        }
+
+        .side-menu h3 {
+            color: #b89753;
+            margin-bottom: 30px;
+            font-size: 20px;
+            border-bottom: 1px solid #d8cebf;
+            padding-bottom: 10px;
+        }
+
+        .side-menu ul {
+            list-style: none;
+        }
+
+        .side-menu ul li {
+            margin-bottom: 20px;
+        }
+
+        .side-menu ul li a {
+            color: #2c2c2c;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            transition: 0.3s;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .side-menu ul li a:hover {
+            background-color: #dfd7cc;
+            color: #b89753;
+            padding-right: 18px;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            color: #2c2c2c;
+            font-size: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* قسم الأسطورة على اليمين ومن غير خانات */
+        .hero-section {
+            margin: 40px 0 60px 0;
+            text-align: right;
+            padding: 0 10px;
+        }
+
+        .hero-section h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            color: #b89753;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .hero-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            color: #8c7339;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .myth-text {
+            color: #2c2c2c;
+            font-size: 16px;
+            line-height: 1.9;
+            text-align: right;
+            direction: ltr;
+            max-width: 900px;
+        }
+
+        /* لوحة التحكم لإضافة المنتجات وتحديد الخانة */
+        .admin-panel {
+            background: #ede7df;
+            border: 1px solid #d8cebf;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .admin-panel.open {
+            display: block;
+        }
+
+        .admin-panel h3 {
+            color: #b89753;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: center;
+        }
+
+        .admin-form input, .admin-form select {
+            padding: 10px;
+            border: 1px solid #d8cebf;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        .admin-form label {
+            font-size: 13px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .admin-form button {
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            grid-column: span full;
+        }
+
+        .admin-form button:hover {
+            background: #b89753;
+        }
+
+        /* شبكة المنتجات */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #d8cebf;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #b89753;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #f0ebe1;
+        }
+
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c2c2c;
+        }
+
+        .product-category-tag {
+            font-size: 12px;
+            color: #8c7339;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .product-price {
+            color: #b89753;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-to-cart {
+            flex: 1;
+            background-color: transparent;
+            border: 1px solid #1a1a1a;
+            color: #1a1a1a;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .add-to-cart:hover {
+            background-color: #1a1a1a;
+            color: #f7f4ef;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #8c8275;
+            border-top: 1px solid #d8cebf;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars-bg"></div>
+
+    <header>
+        <div class="header-right">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo" onclick="filterCategory('All')">Callistaria</div>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Find Your Style">
+        </div>
+
+        <div class="header-actions">
+            <button class="admin-btn" onclick="toggleAdminPanel()">Manage Products</button>
+            <button class="cart-btn" onclick="alert('Your cart is currently empty')">Cart (0)</button>
+        </div>
+    </header>
+
+    <!-- القائمة الجانبية -->
+    <div class="side-menu" id="sideMenu">
+        <button class="close-menu" onclick="toggleMenu()">&times;</button>
+        <h3>Categories</h3>
+        <ul>
+            <li><a onclick="filterCategory('Home')">Home</a></li>
+            <li><a onclick="filterCategory('Dresses')">Dresses</a></li>
+            <li><a onclick="filterCategory('Covers')">Covers</a></li>
+            <li><a onclick="filterCategory('Accessories')">Accessories</a></li>
+            <li><a onclick="filterCategory('Suits')">Suits</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        
+        <!-- لوحة التحكم لإضافة المنتجات وتحديد الخانة -->
+        <div class="admin-panel" id="adminPanel">
+            <h3>Add New Product & Select Category</h3>
+            <div class="admin-form">
+                <div>
+                    <label>Product Name</label>
+                    <input type="text" id="pTitle" placeholder="e.g. Silk Dress">
+                </div>
+                <div>
+                    <label>Price</label>
+                    <input type="text" id="pPrice" placeholder="e.g. 2,450 EGP">
+                </div>
+                <div>
+                    <label>Select Category (الخانة)</label>
+                    <select id="pCategory">
+                        <option value="Dresses">Dresses</option>
+                        <option value="Covers">Covers</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Suits">Suits</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Choose Image from Device</label>
+                    <input type="file" id="pImageFile" accept="image/*">
+                </div>
+                <button onclick="addProduct()">Add Product</button>
+            </div>
+        </div>
+
+        <!-- قسم الأسطورة على اليمين ومن غير خانات -->
+        <div class="hero-section" id="heroSection">
+            <h1>THE MYTH OF CALLISTO & ARCAS</h1>
+            <h3>• A story written in the stars</h3>
+            <div class="myth-text">
+                In Greek mythology, Kallisto was a beautiful nymph associated with the goddess Artemis. After a tragic series of events, she was transformed into a bear. Her son, Arcas, grew up unaware of her true identity. In the end, Zeus placed them among the stars, where they became the constellations Ursa Major and Ursa Minor. Two souls. One story. Forever in the stars.
+            </div>
+        </div>
+
+        <!-- قائمة المنتجات -->
+        <h2 id="sectionTitle" style="margin-bottom: 25px; color: #2c2c2c; font-size: 22px; text-align: left;">Products</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- المنتجات ستظهر هنا ديناميكياً -->
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Callistaria. All rights reserved.
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('active');
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('open');
+        }
+
+        let products = JSON.parse(localStorage.getItem('callistaria_products')) || [
+            { title: "Navy Evening Dress", price: "2,450 EGP", category: "Dresses", img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80" },
+            { title: "Classic Wool Jacket", price: "1,890 EGP", category: "Covers", img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80" },
+            { title: "Elegance Silk Blouse", price: "950 EGP", category: "Accessories", img: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=600&q=80" },
+            { title: "Tailored Luxury Suit", price: "3,200 EGP", category: "Suits", img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80" }
+        ];
+
+        let currentFilter = 'All';
+
+        function filterCategory(cat) {
+            currentFilter = cat;
+            toggleMenu();
+            
+            const hero = document.getElementById('heroSection');
+            const title = document.getElementById('sectionTitle');
+
+            if(cat === 'Home') {
+                hero.style.display = 'block';
+                title.innerText = 'Products';
+                renderProducts('All');
+            } else {
+                hero.style.display = 'none';
+                title.innerText = cat;
+                renderProducts(cat);
+            }
+        }
+
+        function renderProducts(filter = 'All') {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            let filteredProducts = products;
+            if(filter !== 'All') {
+                filteredProducts = products.filter(p => p.category === filter);
+            }
+
+            if(filteredProducts.length === 0) {
+                grid.innerHTML = `<p style="color: #8c8275; grid-column: 1/-1; text-align: center;">No products found in this category.</p>`;
+                return;
+            }
+
+            filteredProducts.forEach((p) => {
+                // العثور على المؤشر الحقيقي للمنتج في المصفوفة الأصلية للحذف الصحيح
+                const realIndex = products.indexOf(p);
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.img || 'https://via.placeholder.com/300'}" alt="${p.title}" class="product-img">
+                        <div class="product-info">
+                            <div>
+                                <div class="product-title">${p.title}</div>
+                                <div class="product-category-tag">${p.category || 'General'}</div>
+                                <div class="product-price">${p.price}</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="add-to-cart" onclick="alert('Added to cart successfully!')">Add to Cart</button>
+                                <button class="delete-btn" onclick="deleteProduct(${realIndex})">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addProduct() {
+            const title = document.getElementById('pTitle').value;
+            const price = document.getElementById('pPrice').value;
+            const category = document.getElementById('pCategory').value;
+            const fileInput = document.getElementById('pImageFile');
+
+            if(!title || !price) {
+                alert('Please enter at least the product name and price.');
+                return;
+            }
+
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    products.push({ title, price, category, img: e.target.result });
+                    localStorage.setItem('callistaria_products', JSON.stringify(products));
+                    clearForm();
+                    renderProducts(currentFilter);
+                    toggleAdminPanel();
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                products.push({ title, price, category, img: "https://via.placeholder.com/300" });
+                localStorage.setItem('callistaria_products', JSON.stringify(products));
+                clearForm();
+                renderProducts(currentFilter);
+                toggleAdminPanel();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('pTitle').value = '';
+            document.getElementById('pPrice').value = '';
+            document.getElementById('pImageFile').value = '';
+        }
+
+        function deleteProduct(index) {
+            products.splice(index, 1);
+            localStorage.setItem('callistaria_products', JSON.stringify(products));
+            renderProducts(currentFilter);
+        }
+
+        renderProducts('All');
+    </script>
+
+</body>
+</html>
